@@ -43,8 +43,8 @@ firefoxWebdriverExecutablePath = '/Users/lmacfarlan/PycharmProjects/Nvidia-Notif
 # Both of these numbers should be strings, in the format '+11234567890' (Not that it includes country code)
 twilioToNumber = '+17035018909'
 twilioFromNumber = '+12185793438'
-twilioSid =  'ACddeb2cc4d8b033972de86afda44fd67a'
-twilioAuth = '13de5cf7d20902a5ac78dddd48d2c744'
+twilioSid =  'insert'
+twilioAuth = 'insert'
 client = Client(twilioSid, twilioAuth)
 
 
