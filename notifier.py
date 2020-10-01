@@ -1,8 +1,9 @@
 from urllib.request import urlopen, Request
-from win10toast import ToastNotifier
+# from win10toast import ToastNotifier
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 
+import os
 import webbrowser
 import time
 import random
@@ -23,11 +24,11 @@ The Value is a tuple of size 4 with the following values:
     3. A nickname for the alert to use.
 '''
 urlKeyWords = {
-    "https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3080/" : ("Out Of Stock", False, True, 'Nvidia'),
-    "https://www.evga.com/products/productlist.aspx?type=0&family=GeForce+30+Series+Family&chipset=RTX+3080" : ("AddCart", True, False, 'EVGA'),
+    # "https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3080/" : ("Out of Stock", False, True, 'Nvidia'),
+    # "https://www.evga.com/products/productlist.aspx?type=0&family=GeForce+30+Series+Family&chipset=RTX+3080" : ("AddCart", True, False, 'EVGA'),
     # "https://www.evga.com/products/productlist.aspx?type=0&family=GeForce+16+Series+Family&chipset=GTX+1650+Super" : ("AddCart", True, False, 'EVGATest'),
     "https://www.newegg.com/p/pl?d=rtx+3080&N=100007709%20601357247" : ("Add to cart", True, False, 'Newegg'),
-    "https://www.bhphotovideo.com/c/search?q=3080&filters=fct_category%3Agraphic_cards_6567" : ("Add to Cart", True, False, 'BandH'),
+    # "https://www.bhphotovideo.com/c/search?q=3080&filters=fct_category%3Agraphic_cards_6567" : ("Add to Cart", True, False, 'BandH'),
     "https://www.bestbuy.com/site/searchpage.jsp?st=3080" : ("cart.svg", True, True, "BestBuy"),
     # "https://www.bestbuy.com/site/searchpage.jsp?st=tv" : ("cart.svg", True, True, "BestBuyTest")
     "https://www.amazon.com/stores/page/6B204EA4-AAAC-4776-82B1-D7C3BD9DDC82?ingress=0" : (">Add to Cart<", True, False, 'Amazon')
@@ -36,20 +37,20 @@ urlKeyWords = {
 
 # Download the geckodriver from https://github.com/mozilla/geckodriver/releases, and then put the path to the executable in this rstring.
 # I used version 0.27.0
-firefoxWebdriverExecutablePath = r'INSERT EXECUTABLE PATH HERE'
+firefoxWebdriverExecutablePath = '/Users/lmacfarlan/PycharmProjects/Nvidia-Notify-Luke/geckodriver'
 
 # If you want text notifications, you'll need to have a Twilio account set up (Free Trial is fine)
 # Both of these numbers should be strings, in the format '+11234567890' (Not that it includes country code)
-twilioToNumber = '+12223334444'
-twilioFromNumber = '+15556667777'
-twilioSid =  '## INSERT TWILIO SID HERE ##'
-twilioAuth = '## INSERT TWILIO AUTH HERE ##'
+twilioToNumber = '+17035018909'
+twilioFromNumber = '+12185793438'
+twilioSid =  'ACddeb2cc4d8b033972de86afda44fd67a'
+twilioAuth = '13de5cf7d20902a5ac78dddd48d2c744'
 client = Client(twilioSid, twilioAuth)
 
 
 options = Options()
 options.headless = True
-toast = ToastNotifier()
+# toast = ToastNotifier()
 driver = webdriver.Firefox(options=options, executable_path=firefoxWebdriverExecutablePath)
 numReloads = 0
 
@@ -57,7 +58,12 @@ def alert(url):
     print("3080 IN STOCK")
     print(url)
     webbrowser.open(url, new=1)
-    toast.show_toast("3080 IN STOCK", url, duration=5, icon_path="icon.ico")
+    # Use this line for win10toast notification
+    # toast.show_toast("3080 IN STOCK", url, duration=5, icon_path="icon.ico")
+    # Use this line for macOS notification
+    os.system("""
+              osascript -e 'display notification "{}" with title "{}"'
+              """.format("3080 IN STOCK", url))
     message = client.messages.create(to=twilioToNumber, from_=twilioFromNumber, body=url)
     time.sleep(60)
 
@@ -116,7 +122,7 @@ def main():
 
         baseSleepAmt = 1
         totalSleep = baseSleepAmt + random.uniform(0, 10)
-        # print("Sleeping for {} seconds".format(totalSleep))
+        print("Sleeping for {} seconds".format(totalSleep))
         time.sleep(totalSleep)
 
 
